@@ -1,5 +1,6 @@
 package com.lamfire.warden;
 
+import com.lamfire.utils.NumberUtils;
 import com.lamfire.utils.StringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpContent;
@@ -7,6 +8,7 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,7 +20,7 @@ import java.util.Set;
  * Time: 下午5:02
  * To change this template use File | Settings | File Templates.
  */
-class HttpRequestParameters {
+public class HttpRequestParameters {
     private HttpRequest  request;
     private HttpContent content;
     private Map<String,List<String>> httpRequestParameters;
@@ -29,7 +31,7 @@ class HttpRequestParameters {
         this.content = content;
     }
 
-    public byte[] getHttpRequestContentAsBytes(){
+    byte[] getHttpRequestContentAsBytes(){
         if(requestContentBytes != null){
             return requestContentBytes;
         }
@@ -48,11 +50,11 @@ class HttpRequestParameters {
         return requestContentBytes;
     }
 
-    public String getHttpRequestContentAsString(){
+    String getHttpRequestContentAsString(){
         return new String(getHttpRequestContentAsBytes());
     }
 
-    public Map<String,List<String>> getHttpRequestParameters(){
+    Map<String,List<String>> getHttpRequestParameters(){
         if(httpRequestParameters != null){
             return httpRequestParameters;
         }
@@ -70,7 +72,7 @@ class HttpRequestParameters {
         return httpRequestParameters;
     }
 
-    public List<String> getHttpRequestParameters(String name){
+    List<String> getHttpRequestParameters(String name){
         Map<String,List<String>> params = getHttpRequestParameters();
         if(params == null){
             return null;
@@ -78,7 +80,7 @@ class HttpRequestParameters {
         return  params.get(name);
     }
 
-    public String getHttpRequestParameter(String name){
+    String getHttpRequestParameter(String name){
         Map<String,List<String>> params = getHttpRequestParameters();
         if(params == null){
             return null;
@@ -90,12 +92,54 @@ class HttpRequestParameters {
         return null;
     }
 
-    public Set<String> getHttpRequestParameterNames(){
+    Set<String> getHttpRequestParameterNames(){
         Map<String,List<String>> params = getHttpRequestParameters();
         if(params == null){
             return null;
         }
         return params.keySet();
+    }
+
+
+
+    public Set<String> names(){
+        return getHttpRequestParameterNames();
+    }
+
+    public byte[] asBytes(){
+        return getHttpRequestContentAsBytes();
+    }
+
+    public String asString(Charset charset){
+        return new String(getHttpRequestContentAsBytes(),charset);
+    }
+
+    public String asString(String charset){
+        return new String(getHttpRequestContentAsBytes(),Charset.forName(charset));
+    }
+
+    public String get(String name){
+        return getHttpRequestParameter(name);
+    }
+
+    public int getInt(String name){
+        return NumberUtils.toInt(getHttpRequestParameter(name),0);
+    }
+
+    public long getLong(String name){
+        return NumberUtils.toLong(getHttpRequestParameter(name),0);
+    }
+
+    public float getFloat(String name){
+        return NumberUtils.toFloat(getHttpRequestParameter(name),0.0f);
+    }
+
+    public double getDouble(String name){
+        return NumberUtils.toDouble(getHttpRequestParameter(name),0.0d);
+    }
+
+    public String getString(String name){
+        return getHttpRequestParameter(name);
     }
 
 }

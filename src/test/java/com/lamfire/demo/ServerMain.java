@@ -18,6 +18,6 @@ public class ServerMain {
 
         System.out.println("Http Server listening on 8844 ...");
 
-        server.shutdown();
+        //server.shutdown();
     }
 }

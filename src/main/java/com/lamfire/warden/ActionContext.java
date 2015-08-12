@@ -174,6 +174,10 @@ public class ActionContext {
 		this.response.headers().set(key, value);
 	}
 
+    public HttpRequestParameters parameters(){
+        return this.parameters;
+    }
+
 	public HttpRequest getHttpRequest() {
 		return request;
 	}

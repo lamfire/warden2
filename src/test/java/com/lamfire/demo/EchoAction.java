@@ -27,6 +27,7 @@ public class EchoAction implements Action {
 //        System.out.println(context.getHttpRequestHeaderNames());
 //        System.out.println(context.getHttpRequestParameterNames());
 //        System.out.println(context.getHttpRequestContentAsString());
+        context.parameters();
 
         byte[] message = context.getRequestBody();
         context.writeResponse(message);
