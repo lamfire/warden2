@@ -9,7 +9,7 @@ import com.lamfire.utils.ObjectFactory;
  * Time: 上午10:08
  * To change this template use File | Settings | File Templates.
  */
-public class DefaultActionFactory implements ActionFactory {
+class DefaultActionFactory implements ActionFactory {
     private Class<? extends Action> actionClass;
     private ObjectFactory<Action> factory;
 

@@ -42,7 +42,7 @@ public class PreformenceTest implements Runnable {
             }
         }, 1, 1, TimeUnit.SECONDS);
 
-        int nThreads = 20;
+        int nThreads = 10;
         ThreadPoolExecutor executor = new ThreadPoolExecutor(nThreads, nThreads,0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>()) ;
 
         while(true){

@@ -12,9 +12,12 @@ import com.lamfire.warden.HttpServer;
  */
 public class ServerMain {
     public static void main(String[] args) throws Exception {
-        ActionRegistry.getInstance().mappingPackage(ServerMain.class.getPackage().getName());
         HttpServer server = new HttpServer(8844);
-        System.out.println("Http Server listening on 8844 ...");
+        server.registerAll(ServerMain.class.getPackage().getName());
         server.startup();
+
+        System.out.println("Http Server listening on 8844 ...");
+
+        server.shutdown();
     }
 }

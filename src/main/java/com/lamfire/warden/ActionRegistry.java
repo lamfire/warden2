@@ -13,16 +13,6 @@ public class ActionRegistry {
 	private static final Logger LOGGER = Logger.getLogger(ActionRegistry.class);
 	private final Map<String,ActionFactory> mapping = new HashMap<String, ActionFactory>();
 
-    private static final ActionRegistry instance = new ActionRegistry();
-
-    public static ActionRegistry getInstance(){
-        return instance;
-    }
-
-    private ActionRegistry(){
-
-    }
-
     public void mapping(Class<? extends Action> actionClass){
         ACTION actionAnno = actionClass.getAnnotation(ACTION.class);
         if(actionAnno == null){
@@ -41,17 +31,17 @@ public class ActionRegistry {
 
 	public void mappingAction(String uri,Class<? extends Action> actionClass){
 		mapping.put(uri, new DefaultActionFactory(actionClass));
-		LOGGER.info("[mappingAction]:" + uri +" -> " + actionClass.getName());
+		LOGGER.info("[Action]:" + uri +" -> " + actionClass.getName());
 	}
 
     public void mappingSingletonAction(String uri,Class<? extends Action> actionClass) {
         mapping.put(uri, new SingletonActionFactory(actionClass));
-        LOGGER.info("[mappingSingletonAction]:" + uri +" -> " + actionClass.getName());
+        LOGGER.info("[SingletonAction]:" + uri +" -> " + actionClass.getName());
     }
 
     public void mappingParamBoundAction(String uri,Class<? extends Action> actionClass) {
         mapping.put(uri, new ParamBoundActionFactory(actionClass));
-        LOGGER.info("[mappingParamBoundAction]:" + uri +" -> " + actionClass.getName());
+        LOGGER.info("[ParamBoundAction]:" + uri +" -> " + actionClass.getName());
     }
 
     public ActionFactory getActionFactory(String uri){
@@ -76,4 +66,8 @@ public class ActionRegistry {
             mapping(actionClass);
 		}
 	}
+
+    public boolean isEmpty(){
+        return mapping.isEmpty();
+    }
 }

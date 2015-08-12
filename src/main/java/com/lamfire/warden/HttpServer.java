@@ -13,6 +13,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: linfan
@@ -21,8 +23,8 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
  * To change this template use File | Settings | File Templates.
  */
 public class HttpServer {
-
-    private static Logger log = Logger.getLogger(HttpServer.class);
+    private static final Logger LOGGER = Logger.getLogger(HttpServer.class);
+    private final ActionRegistry registry = new ActionRegistry();
     private ServerBootstrap bootstrap;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
@@ -49,7 +51,23 @@ public class HttpServer {
         this.workerThreads = workerThreads;
     }
 
+    public ActionRegistry getActionRegistry(){
+        return registry;
+    }
+
+    public void register(Class<? extends Action> actionClass) {
+        registry.mapping(actionClass);
+    }
+
+    public void registerAll(String packageName) throws ClassNotFoundException, IOException, IllegalAccessException, InstantiationException {
+        registry.mappingPackage(packageName);
+    }
+
     public synchronized void startup() {
+        if(registry.isEmpty()){
+            LOGGER.error("Not found actions,system shutdown now...");
+            System.exit(-1);
+        }
         bossGroup = new NioEventLoopGroup(4, Threads.makeThreadFactory("boss"));
         workerGroup = new NioEventLoopGroup(workerThreads, Threads.makeThreadFactory("worker"));
         try {
@@ -60,7 +78,7 @@ public class HttpServer {
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new HttpResponseEncoder());
                             ch.pipeline().addLast(new HttpRequestDecoder());
-                            ch.pipeline().addLast(new HttpServerInboundHandler());
+                            ch.pipeline().addLast(new HttpServerInboundHandler(registry));
                         }
                     }).option(ChannelOption.SO_BACKLOG, 100)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -73,17 +91,22 @@ public class HttpServer {
 
     public synchronized void shutdown(){
         try {
-            bindFuture.channel().closeFuture().sync();
-
+            LOGGER.info("Shutdown listener channel...");
+            bindFuture.channel().close().sync();
         }catch (Exception e){
 
-        }finally {
-            workerGroup.shutdownGracefully();
-            bossGroup.shutdownGracefully();
-            bossGroup = null;
-            workerGroup = null;
-            bindFuture = null;
-            bootstrap = null;
         }
+
+        LOGGER.info("Shutdown worker group...");
+        workerGroup.shutdownGracefully();
+
+        LOGGER.info("Shutdown boss group...");
+        bossGroup.shutdownGracefully();
+
+
+        bossGroup = null;
+        workerGroup = null;
+        bindFuture = null;
+        bootstrap = null;
     }
 }

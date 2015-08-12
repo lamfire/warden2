@@ -21,12 +21,17 @@ import java.nio.charset.Charset;
  */
 public class HttpServerInboundHandler extends ChannelInboundHandlerAdapter {
     private static final Logger LOGGER = Logger.getLogger(HttpServerInboundHandler.class);
+    private final ActionRegistry registry;
     private HttpRequest request;
 
+    public HttpServerInboundHandler(ActionRegistry registry){
+        this.registry = registry;
+    }
+
     protected Action getAction(ActionContext context) throws ActionNotFoundException {
-        Action action = ActionRegistry.getInstance().lookup(context);
+        Action action = registry.lookup(context);
         if (action == null) {
-            throw new ActionNotFoundException("Not found action mapping PATH:" + context.getPath());
+            throw new ActionNotFoundException("Not found action for PATH:" + context.getPath());
         }
         return action;
     }

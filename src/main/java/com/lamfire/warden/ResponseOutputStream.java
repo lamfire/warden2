@@ -15,7 +15,7 @@ import java.io.OutputStream;
  * Time: 下午2:03
  * To change this template use File | Settings | File Templates.
  */
-public class ResponseOutputStream extends OutputStream implements DataOutput {
+class ResponseOutputStream extends OutputStream implements DataOutput {
     private ByteBuf buffer;
 
     ResponseOutputStream(ByteBuf buffer){

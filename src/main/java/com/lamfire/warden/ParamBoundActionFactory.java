@@ -13,7 +13,7 @@ import java.util.Map;
  * Time: 上午10:41
  * To change this template use File | Settings | File Templates.
  */
-public class ParamBoundActionFactory extends DefaultActionFactory {
+class ParamBoundActionFactory extends DefaultActionFactory {
     private static final Logger LOGGER = Logger.getLogger(ParamBoundActionFactory.class);
 
     public ParamBoundActionFactory(Class<? extends Action> actionClass) {

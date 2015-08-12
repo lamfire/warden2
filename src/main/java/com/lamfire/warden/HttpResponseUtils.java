@@ -13,7 +13,7 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 
-public class HttpResponseUtils {
+class HttpResponseUtils {
 	private static final Logger LOGGER = Logger.getLogger(HttpResponseUtils.class);
 
     public static void sendHttpResponse(ChannelHandlerContext ctx,HttpRequest request, HttpResponse response){

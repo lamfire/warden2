@@ -18,7 +18,7 @@ import java.util.Set;
  * Time: 下午5:02
  * To change this template use File | Settings | File Templates.
  */
-public class HttpRequestParameters {
+class HttpRequestParameters {
     private HttpRequest  request;
     private HttpContent content;
     private Map<String,List<String>> httpRequestParameters;
