@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ActionContext {
+
     private final DefaultFullHttpResponse response;
 	private final HttpRequest request;
 	private final ChannelHandlerContext channelHandlerContext;
@@ -79,11 +80,11 @@ public class ActionContext {
     }
 
     public byte[] getRequestBody(){
-        return parameters.getHttpRequestContentAsBytes();
+        return parameters.asBytes();
     }
 
     public String getRequestBodyAsString(){
-          return new String(getRequestBody(),getRequestCharset());
+          return parameters.asString();
     }
 
 	public String getRemoteAddress(){
@@ -166,7 +167,7 @@ public class ActionContext {
         return parameters.getHttpRequestParameter(name);
     }
 
-    public Set<String> getHttpRequestParameterNames(){
+    public Set<String> getRequestParameterNames(){
         return parameters.getHttpRequestParameterNames();
     }
 	

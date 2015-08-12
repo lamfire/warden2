@@ -1,5 +1,6 @@
 package com.lamfire.warden;
 
+import com.lamfire.utils.Lists;
 import com.lamfire.utils.NumberUtils;
 import com.lamfire.utils.StringUtils;
 import io.netty.buffer.ByteBuf;
@@ -100,14 +101,16 @@ public class HttpRequestParameters {
         return params.keySet();
     }
 
-
-
     public Set<String> names(){
         return getHttpRequestParameterNames();
     }
 
     public byte[] asBytes(){
         return getHttpRequestContentAsBytes();
+    }
+
+    public String asString(){
+        return new String(getHttpRequestContentAsBytes());
     }
 
     public String asString(Charset charset){
@@ -122,24 +125,67 @@ public class HttpRequestParameters {
         return getHttpRequestParameter(name);
     }
 
+    public List<String> gets(String name){
+        return getHttpRequestParameters(name);
+    }
+
     public int getInt(String name){
         return NumberUtils.toInt(getHttpRequestParameter(name),0);
+    }
+
+    public List<Integer> getInts(String name){
+        List<Integer> result = Lists.newArrayList();
+        List<String> params = getHttpRequestParameters(name);
+        for(String param : params){
+            result.add(NumberUtils.toInt(param,0));
+        }
+        return result;
     }
 
     public long getLong(String name){
         return NumberUtils.toLong(getHttpRequestParameter(name),0);
     }
 
+    public List<Long> getLongs(String name){
+        List<Long> result = Lists.newArrayList();
+        List<String> params = getHttpRequestParameters(name);
+        for(String param : params){
+            result.add(NumberUtils.toLong(param,0));
+        }
+        return result;
+    }
+
     public float getFloat(String name){
         return NumberUtils.toFloat(getHttpRequestParameter(name),0.0f);
+    }
+
+    public List<Float> getFloats(String name){
+        List<Float> result = Lists.newArrayList();
+        List<String> params = getHttpRequestParameters(name);
+        for(String param : params){
+            result.add(NumberUtils.toFloat(param,0));
+        }
+        return result;
     }
 
     public double getDouble(String name){
         return NumberUtils.toDouble(getHttpRequestParameter(name),0.0d);
     }
 
+    public List<Double> getDoubles(String name){
+        List<Double> result = Lists.newArrayList();
+        List<String> params = getHttpRequestParameters(name);
+        for(String param : params){
+            result.add(NumberUtils.toDouble(param,0));
+        }
+        return result;
+    }
+
     public String getString(String name){
         return getHttpRequestParameter(name);
     }
 
+    public List<String> getStrings(String name){
+        return getHttpRequestParameters(name);
+    }
 }

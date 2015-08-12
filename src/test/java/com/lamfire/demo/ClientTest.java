@@ -33,7 +33,7 @@ public class ClientTest {
         client.addPostParameter("name","lamfire(小林子)");
         client.addPostParameter("age", ""+ RandomUtils.nextInt());
         client.addPostParameter("items",""+ RandomUtils.nextInt());
-        //client.addPostParameter("items",""+RandomUtils.nextInt());
+        client.addPostParameter("items",""+RandomUtils.nextInt());
         client.post();
 
         byte[] ret = client.read();
