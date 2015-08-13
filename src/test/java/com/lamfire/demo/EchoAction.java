@@ -24,24 +24,12 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 public class EchoAction implements Action {
     @Override
     public void execute(ActionContext context) {
-//        System.out.println(context.getHttpRequestHeaderNames());
-//        System.out.println(context.getHttpRequestParameterNames());
-//        System.out.println(context.getHttpRequestContentAsString());
-
-        System.out.println(context.parameters().asString());
-        System.out.println(context.parameters().getInt("age"));
-        System.out.println(context.parameters().get("name"));
-        System.out.println(context.parameters().getInts("items"));
+//        System.out.println(context.parameters().asString());
+//        System.out.println(context.parameters().getInt("age"));
+//        System.out.println(context.parameters().get("name"));
+//        System.out.println(context.parameters().getInts("items"));
 
         byte[] message = context.getRequestBody();
         context.writeResponse(message);
-
-        //FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK, Unpooled.wrappedBuffer(message));
-        //FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK);
-        //response.content().writeBytes(message);
-        //response.headers().set(CONTENT_LENGTH,response.content().readableBytes());
-        //response.headers().set(EXPIRES, 0);
-
-        //HttpResponseUtils.sendHttpResponse(context.getChannelHandlerContext(),context.getHttpRequest(),response);
     }
 }

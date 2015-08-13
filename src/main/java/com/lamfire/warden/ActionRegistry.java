@@ -22,8 +22,6 @@ public class ActionRegistry {
         String uri = actionAnno.path();
         if(actionAnno.singleton() ){
             mappingSingletonAction(uri,actionClass);
-        } else if(actionAnno.enableBoundParameters()){
-            mappingParamBoundAction(uri,actionClass);
         } else{
             mappingAction(uri,actionClass);
         }
@@ -37,11 +35,6 @@ public class ActionRegistry {
     public void mappingSingletonAction(String uri,Class<? extends Action> actionClass) {
         mapping.put(uri, new SingletonActionFactory(actionClass));
         LOGGER.info("[SingletonAction]:" + uri +" -> " + actionClass.getName());
-    }
-
-    public void mappingParamBoundAction(String uri,Class<? extends Action> actionClass) {
-        mapping.put(uri, new ParamBoundActionFactory(actionClass));
-        LOGGER.info("[ParamBoundAction]:" + uri +" -> " + actionClass.getName());
     }
 
     public ActionFactory getActionFactory(String uri){

@@ -1,9 +1,6 @@
 package com.lamfire.demo;
 
-import com.lamfire.utils.HttpClient;
-import com.lamfire.utils.IOUtils;
-import com.lamfire.utils.RandomUtils;
-import com.lamfire.utils.Threads;
+import com.lamfire.utils.*;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ClientTest {
     final static AtomicInteger counter = new AtomicInteger();
 
-    public static void post() throws IOException {
+    public static String post() throws IOException {
         HttpClient client = new HttpClient();
         client.setContentType(HttpClient.ContentType.application_x_www_form_urlencoded);
         client.setMethod("POST");
@@ -42,11 +39,29 @@ public class ClientTest {
         IOUtils.closeQuietly(client.getInputStream());
         IOUtils.closeQuietly(client.getOutputStream());
         client.close();
+        return new String(ret);
+    }
+
+    public static String get() throws IOException {
+        HttpClient client = new HttpClient();
+        client.setContentType(HttpClient.ContentType.application_x_www_form_urlencoded);
+        client.setMethod("GET");
+        client.setCharset("UTF-8");
+        client.open("http://127.0.0.1:8844/echo?name="+ URLUtils.encode("lamfire(小林子)","utf-8")+"&age=18&items=23&items=24");
+
+        byte[] ret = client.read();
+        //System.out.println("POST_RESULT["+ ret.length +"]:" + new String(ret));
+
+        IOUtils.closeQuietly(client.getInputStream());
+        IOUtils.closeQuietly(client.getOutputStream());
+        client.close();
+        return new String(ret);
     }
 
 
 
     public static void main(String[] args)throws IOException {
-        post();
+        System.out.println(get());
+        System.out.println(post());
     }
 }

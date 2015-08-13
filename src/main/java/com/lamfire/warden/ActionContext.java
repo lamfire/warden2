@@ -20,10 +20,10 @@ public class ActionContext {
     private HttpRequestParameters parameters;
     private QueryStringDecoder queryStringDecoder;
 	
-	ActionContext(ChannelHandlerContext ctx, HttpRequest request,HttpContent content){
+	ActionContext(ChannelHandlerContext ctx, HttpRequest request,HttpRequestParameters parameters){
 		this.request = request;
 		this.channelHandlerContext = ctx;
-        this.parameters = new HttpRequestParameters(request,content);
+        this.parameters = parameters;
         this.response =  new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
         this.response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain");
     }
@@ -155,22 +155,6 @@ public class ActionContext {
         return Charset.forName(charset);
     }
 
-    public synchronized Map<String,List<String>> getRequestParameters(){
-        return parameters.getHttpRequestParameters();
-    }
-
-    public List<String> getRequestParameters(String name){
-        return parameters.getHttpRequestParameters(name);
-    }
-
-    public String getRequestParameter(String name){
-        return parameters.getHttpRequestParameter(name);
-    }
-
-    public Set<String> getRequestParameterNames(){
-        return parameters.getHttpRequestParameterNames();
-    }
-	
 	public void setResponseHeader(String key,Object value){
 		this.response.headers().set(key, value);
 	}

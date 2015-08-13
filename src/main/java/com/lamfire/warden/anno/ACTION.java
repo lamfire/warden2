@@ -8,6 +8,5 @@ import java.lang.annotation.*;
 @Target( { java.lang.annotation.ElementType.TYPE })
 public @interface ACTION {
 	public abstract String path();
-    public abstract boolean singleton() default false;
-    public abstract boolean enableBoundParameters() default false;
+    public abstract boolean singleton() default true;
 }

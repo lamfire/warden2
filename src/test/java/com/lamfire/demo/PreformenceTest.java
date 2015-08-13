@@ -23,7 +23,7 @@ public class PreformenceTest implements Runnable {
     @Override
     public void run() {
         try{
-            ClientTest.post();
+            ClientTest.get();
             counter.incrementAndGet();
         }catch (Throwable t){
             t.printStackTrace();
