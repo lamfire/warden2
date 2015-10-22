@@ -97,16 +97,18 @@ public class HttpServer {
 
         }
 
-        LOGGER.info("Shutdown worker group...");
-        workerGroup.shutdownGracefully();
+        try{
+            LOGGER.info("Shutdown worker group...");
+            workerGroup.shutdownGracefully();
 
-        LOGGER.info("Shutdown boss group...");
-        bossGroup.shutdownGracefully();
+            LOGGER.info("Shutdown boss group...");
+            bossGroup.shutdownGracefully();
+        }finally {
+            bossGroup = null;
+            workerGroup = null;
+            bindFuture = null;
+            bootstrap = null;
+        }
 
-
-        bossGroup = null;
-        workerGroup = null;
-        bindFuture = null;
-        bootstrap = null;
     }
 }
