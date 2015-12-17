@@ -59,7 +59,7 @@ public class HttpServerInboundHandler extends ChannelInboundHandlerAdapter {
         }catch(ActionNotFoundException exception){
             String message = "404 Not Found - " + request.getUri();
             HttpResponseUtils.sendHttpResponse(ctx,request,HttpResponseStatus.NOT_FOUND,"text/plain",message.getBytes());
-            LOGGER.error(exception.getMessage(), exception);
+            LOGGER.error(exception.getMessage());
         }catch (Throwable t) {
             LOGGER.error(t.getMessage(), t);
         }
