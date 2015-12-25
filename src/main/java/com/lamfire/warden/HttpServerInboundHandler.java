@@ -27,12 +27,14 @@ public class HttpServerInboundHandler extends ChannelInboundHandlerAdapter {
     private static final Logger LOGGER = Logger.getLogger(HttpServerInboundHandler.class);
 
     private final ActionRegistry registry;
+    private final WardenOptions options;
 
     private HttpRequest request;
     private ByteBuf content;
 
-    public HttpServerInboundHandler(ActionRegistry registry){
+    public HttpServerInboundHandler(ActionRegistry registry,WardenOptions options){
         this.registry = registry;
+        this.options = options;
     }
 
     protected Action getAction(ActionContext context) throws ActionNotFoundException {
@@ -53,6 +55,7 @@ public class HttpServerInboundHandler extends ChannelInboundHandlerAdapter {
                 params = new HttpGetRequestParameters(request);
             }
             ActionContext context = new ActionContext(ctx, request,params);
+            context.setResponseContentType(options.getDefaultResponseContentType());
             Action action = getAction(context);
             action.execute(context);
             HttpResponseUtils.sendHttpResponse(ctx,request,context.getHttpResponse());

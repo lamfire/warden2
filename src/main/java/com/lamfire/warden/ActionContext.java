@@ -19,13 +19,12 @@ public class ActionContext {
 	private final ChannelHandlerContext channelHandlerContext;
     private HttpRequestParameters parameters;
     private QueryStringDecoder queryStringDecoder;
-	
+
 	ActionContext(ChannelHandlerContext ctx, HttpRequest request,HttpRequestParameters parameters){
 		this.request = request;
 		this.channelHandlerContext = ctx;
         this.parameters = parameters;
         this.response =  new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-        this.response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain");
     }
 	
 	Channel getChannel(){
@@ -34,6 +33,10 @@ public class ActionContext {
 
     public ChannelHandlerContext getChannelHandlerContext() {
         return channelHandlerContext;
+    }
+
+    public void setResponseContentType(String contentType){
+        this.response.headers().set(HttpHeaders.Names.CONTENT_TYPE,contentType);
     }
 
     public boolean isKeepAlive(){

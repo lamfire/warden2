@@ -25,34 +25,35 @@ import java.io.IOException;
 public class HttpServer {
     private static final Logger LOGGER = Logger.getLogger(HttpServer.class);
     private final ActionRegistry registry = new ActionRegistry();
+    private final WardenOptions options = new WardenOptions();
     private ServerBootstrap bootstrap;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private ChannelFuture bindFuture;
 
-    private String bind = "0.0.0.0";
-    private int port = 8080;
-    private int workerThreads = 32;
-
     public HttpServer(int port){
-        this.port = port;
+        this.options.setPort(port);
     }
 
     public HttpServer(String bind,int port){
-        this.bind = bind;
-        this.port = port;
+        this.options.setBind(bind);
+        this.options.setPort(port);
     }
 
     public int getWorkerThreads() {
-        return workerThreads;
+        return this.options.getWorkerThreads();
     }
 
     public void setWorkerThreads(int workerThreads) {
-        this.workerThreads = workerThreads;
+        this.options.setWorkerThreads(workerThreads);
     }
 
     public ActionRegistry getActionRegistry(){
         return registry;
+    }
+
+    public WardenOptions getOptions(){
+        return options;
     }
 
     public void register(Class<? extends Action> actionClass) {
@@ -63,13 +64,15 @@ public class HttpServer {
         registry.mappingPackage(packageName);
     }
 
+
+
     public synchronized void startup() {
         if(registry.isEmpty()){
             LOGGER.error("Not found actions,system shutdown now...");
             System.exit(-1);
         }
         bossGroup = new NioEventLoopGroup(4, Threads.makeThreadFactory("boss"));
-        workerGroup = new NioEventLoopGroup(workerThreads, Threads.makeThreadFactory("worker"));
+        workerGroup = new NioEventLoopGroup(options.getWorkerThreads(), Threads.makeThreadFactory("worker"));
         try {
             bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
@@ -78,12 +81,12 @@ public class HttpServer {
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new HttpResponseEncoder());
                             ch.pipeline().addLast(new HttpRequestDecoder());
-                            ch.pipeline().addLast(new HttpServerInboundHandler(registry));
+                            ch.pipeline().addLast(new HttpServerInboundHandler(registry,options));
                         }
                     }).option(ChannelOption.SO_BACKLOG, 100)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            bindFuture = bootstrap.bind(bind,port).sync();
+            bindFuture = bootstrap.bind(options.getBind(),options.getPort()).sync();
         }catch (Exception e){
             throw new RuntimeException(e);
         }

@@ -35,10 +35,6 @@ public class ClientTest {
 
         byte[] ret = client.read();
         //System.out.println("POST_RESULT["+ ret.length +"]:" + new String(ret));
-
-        IOUtils.closeQuietly(client.getInputStream());
-        IOUtils.closeQuietly(client.getOutputStream());
-        client.close();
         return new String(ret);
     }
 
@@ -51,10 +47,6 @@ public class ClientTest {
 
         byte[] ret = client.read();
         //System.out.println("POST_RESULT["+ ret.length +"]:" + new String(ret));
-
-        IOUtils.closeQuietly(client.getInputStream());
-        IOUtils.closeQuietly(client.getOutputStream());
-        client.close();
         return new String(ret);
     }
 
