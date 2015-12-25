@@ -159,6 +159,10 @@ public class ActionContext {
 		this.response.headers().set(key, value);
 	}
 
+    public HttpRequestParameters getHttpRequestParameters(){
+        return this.parameters;
+    }
+
     public HttpRequestParameters parameters(){
         return this.parameters;
     }
