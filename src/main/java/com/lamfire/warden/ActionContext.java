@@ -159,6 +159,9 @@ public class ActionContext {
     }
 
 	public void setResponseHeader(String key,Object value){
+        if(key == null){
+            throw new NullPointerException("Response header key cannot was NULL");
+        }
 		this.response.headers().set(key, value);
 	}
 
