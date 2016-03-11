@@ -35,6 +35,7 @@ public class ClientTest {
 
         byte[] ret = client.read();
         //System.out.println("POST_RESULT["+ ret.length +"]:" + new String(ret));
+        client.close();
         return new String(ret);
     }
 

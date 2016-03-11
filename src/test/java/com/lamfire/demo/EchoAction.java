@@ -31,5 +31,6 @@ public class EchoAction implements Action {
 
         byte[] message = context.getRequestBody();
         context.writeResponse(message);
+        System.out.println(new String(message));
     }
 }
