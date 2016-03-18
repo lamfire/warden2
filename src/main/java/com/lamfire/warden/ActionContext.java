@@ -165,6 +165,10 @@ public class ActionContext {
 		this.response.headers().set(key, value);
 	}
 
+    public void setResponseStatus(int status){
+        this.response.setStatus(HttpResponseStatus.valueOf(status));
+    }
+
     public HttpRequestParameters getHttpRequestParameters(){
         return this.parameters;
     }
