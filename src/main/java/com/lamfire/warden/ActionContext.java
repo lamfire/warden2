@@ -9,8 +9,8 @@ import io.netty.handler.codec.http.HttpHeaders;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+
 
 public class ActionContext {
 
@@ -88,6 +88,10 @@ public class ActionContext {
 
     public String getRequestBodyAsString(){
           return parameters.asString();
+    }
+
+    public String getRequestBodyAsString(String charset){
+        return parameters.asString(charset);
     }
 
 	public String getRemoteAddress(){
@@ -176,6 +180,47 @@ public class ActionContext {
     public HttpRequestParameters parameters(){
         return this.parameters;
     }
+
+    public String getParameter(String name){
+        return this.parameters.getString(name);
+    }
+
+    public List<String> getParameters(String name){
+        return this.parameters.getStrings(name);
+    }
+
+    public int getParameterAsInt(String name){
+        return this.parameters.getInt(name);
+    }
+
+    public long getParameterAsLong(String name){
+        return this.parameters.getLong(name);
+    }
+
+    public float getParameterAsFloat(String name){
+        return this.parameters.getFloat(name);
+    }
+
+    public double getParameterAsDouble(String name){
+        return this.parameters.getDouble(name);
+    }
+
+    public List<Integer> getParameterAsInts(String name){
+        return this.parameters.getInts(name);
+    }
+
+    public List<Long> getParameterAsLongs(String name){
+        return this.parameters.getLongs(name);
+    }
+
+    public List<Float> getParameterAsFloats(String name){
+        return this.parameters.getFloats(name);
+    }
+
+    public List<Double> getParameterAsDoubles(String name){
+        return this.parameters.getDoubles(name);
+    }
+
 
 	public HttpRequest getHttpRequest() {
 		return request;
