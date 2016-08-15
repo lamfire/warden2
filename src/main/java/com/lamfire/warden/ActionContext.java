@@ -17,7 +17,7 @@ public class ActionContext {
     private final DefaultFullHttpResponse response;
 	private final HttpRequest request;
 	private final ChannelHandlerContext channelHandlerContext;
-    private HttpRequestParameters parameters;
+    private final HttpRequestParameters parameters;
     private QueryStringDecoder queryStringDecoder;
 
 	ActionContext(ChannelHandlerContext ctx, HttpRequest request,HttpRequestParameters parameters){
