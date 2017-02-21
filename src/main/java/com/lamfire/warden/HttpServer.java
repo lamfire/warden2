@@ -62,11 +62,11 @@ public class HttpServer {
         registry.mappingPackage(packageName);
     }
 
-    public <T> void childOption(ChannelOption<T> childOption, T value) {
+    public <T> void setChildOption(ChannelOption<T> childOption, T value) {
         this.bootstrap.childOption(childOption,value);
     }
 
-    public <T> void childAttr(AttributeKey<T> childKey, T value) {
+    public <T> void setChildAttr(AttributeKey<T> childKey, T value) {
         this.bootstrap.childAttr(childKey,value);
     }
 

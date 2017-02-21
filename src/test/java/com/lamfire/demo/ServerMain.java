@@ -14,7 +14,6 @@ public class ServerMain {
     public static void main(String[] args) throws Exception {
         HttpServer server = new HttpServer(8844);
         server.registerAll(ServerMain.class.getPackage().getName());
-
         server.startup();
 
         System.out.println("Http Server listening on 8844 ...");
