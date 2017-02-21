@@ -3,15 +3,13 @@ package com.lamfire.warden;
 import com.lamfire.logger.Logger;
 import com.lamfire.utils.Threads;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.util.AttributeKey;
 
 import java.io.IOException;
 
@@ -26,7 +24,7 @@ public class HttpServer {
     private static final Logger LOGGER = Logger.getLogger(HttpServer.class);
     private final ActionRegistry registry = new ActionRegistry();
     private final WardenOptions options = new WardenOptions();
-    private ServerBootstrap bootstrap;
+    private final ServerBootstrap bootstrap = new ServerBootstrap();;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private ChannelFuture bindFuture;
@@ -64,7 +62,17 @@ public class HttpServer {
         registry.mappingPackage(packageName);
     }
 
+    public <T> void childOption(ChannelOption<T> childOption, T value) {
+        this.bootstrap.childOption(childOption,value);
+    }
 
+    public <T> void childAttr(AttributeKey<T> childKey, T value) {
+        this.bootstrap.childAttr(childKey,value);
+    }
+
+    public ServerBootstrap getBootstrap(){
+        return this.bootstrap;
+    }
 
     public synchronized void startup() {
         if(registry.isEmpty()){
@@ -74,7 +82,6 @@ public class HttpServer {
         bossGroup = new NioEventLoopGroup(4, Threads.makeThreadFactory("boss"));
         workerGroup = new NioEventLoopGroup(options.getWorkerThreads(), Threads.makeThreadFactory("worker"));
         try {
-            bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
@@ -103,14 +110,12 @@ public class HttpServer {
         try{
             LOGGER.info("Shutdown worker group...");
             workerGroup.shutdownGracefully();
-
             LOGGER.info("Shutdown boss group...");
             bossGroup.shutdownGracefully();
         }finally {
             bossGroup = null;
             workerGroup = null;
             bindFuture = null;
-            bootstrap = null;
         }
 
     }
