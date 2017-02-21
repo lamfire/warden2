@@ -76,7 +76,7 @@ public class HttpServer {
 
     public synchronized void startup() {
         if(registry.isEmpty()){
-            LOGGER.error("Not found actions,system shutdown now...");
+            LOGGER.error("Not found registered actions,system shutdown now...");
             System.exit(-1);
         }
         bossGroup = new NioEventLoopGroup(4, Threads.makeThreadFactory("boss"));
