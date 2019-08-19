@@ -38,7 +38,11 @@ public class ActionRegistry {
     }
 
     public ActionFactory getActionFactory(String uri){
-        return mapping.get(uri);
+        ActionFactory factory =  mapping.get(uri);
+        if(factory != null){
+            return factory;
+        }
+        return mapping.get("*");
     }
 	
 	public Action lookup(ActionContext context){
