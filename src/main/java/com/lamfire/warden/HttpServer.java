@@ -7,8 +7,12 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.codec.http.cors.CorsConfig;
+import io.netty.handler.codec.http.cors.CorsHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.AttributeKey;
 
 import java.io.IOException;
@@ -28,6 +32,9 @@ public class HttpServer {
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private ChannelFuture bindFuture;
+    private CorsConfig corsConfig;
+    private int maxContentLength = 65536;
+
 
     public HttpServer(int port){
         this.options.setPort(port);
@@ -36,6 +43,23 @@ public class HttpServer {
     public HttpServer(String bind,int port){
         this.options.setBind(bind);
         this.options.setPort(port);
+        this.corsConfig = CorsConfig.withAnyOrigin().allowNullOrigin().allowCredentials().build();
+    }
+
+    public CorsConfig getCorsConfig() {
+        return corsConfig;
+    }
+
+    public int getMaxContentLength() {
+        return maxContentLength;
+    }
+
+    public void setMaxContentLength(int maxContentLength) {
+        this.maxContentLength = maxContentLength;
+    }
+
+    public void setCorsConfig(CorsConfig corsConfig) {
+        this.corsConfig = corsConfig;
     }
 
     public int getWorkerThreads() {
@@ -88,6 +112,9 @@ public class HttpServer {
                         public void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new HttpResponseEncoder());
                             ch.pipeline().addLast(new HttpRequestDecoder());
+                            ch.pipeline().addLast(new HttpObjectAggregator(maxContentLength));
+                            ch.pipeline().addLast(new ChunkedWriteHandler());
+                            ch.pipeline().addLast(new CorsHandler(corsConfig));
                             ch.pipeline().addLast(new HttpServerInboundHandler(registry,options));
                         }
                     }).option(ChannelOption.SO_BACKLOG, 100)

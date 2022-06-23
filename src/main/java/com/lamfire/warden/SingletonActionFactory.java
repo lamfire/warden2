@@ -4,7 +4,7 @@ class SingletonActionFactory extends DefaultActionFactory {
 
     private Action instance ;
 
-    public SingletonActionFactory(Class<? extends Action> actionClass) {
+    public SingletonActionFactory(Class<?> actionClass) {
         super(actionClass);
     }
 

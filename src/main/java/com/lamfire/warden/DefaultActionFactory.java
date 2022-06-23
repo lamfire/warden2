@@ -10,10 +10,10 @@ import com.lamfire.utils.ObjectFactory;
  * To change this template use File | Settings | File Templates.
  */
 class DefaultActionFactory implements ActionFactory {
-    private Class<? extends Action> actionClass;
+    private Class<?> actionClass;
     private ObjectFactory<Action> factory;
 
-    public DefaultActionFactory(Class<? extends Action> actionClass){
+    public DefaultActionFactory(Class<?> actionClass){
         this.actionClass = actionClass;
         this.factory = new ObjectFactory<Action>((Class<Action>)actionClass);
     }
