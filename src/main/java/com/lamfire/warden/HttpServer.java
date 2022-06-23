@@ -11,6 +11,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.codec.http.cors.CorsConfig;
+import io.netty.handler.codec.http.cors.CorsConfigBuilder;
 import io.netty.handler.codec.http.cors.CorsHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.AttributeKey;
@@ -43,7 +44,6 @@ public class HttpServer {
     public HttpServer(String bind,int port){
         this.options.setBind(bind);
         this.options.setPort(port);
-        this.corsConfig = CorsConfig.withAnyOrigin().allowNullOrigin().allowCredentials().build();
     }
 
     public CorsConfig getCorsConfig() {
@@ -114,7 +114,7 @@ public class HttpServer {
                             ch.pipeline().addLast(new HttpRequestDecoder());
                             ch.pipeline().addLast(new HttpObjectAggregator(maxContentLength));
                             ch.pipeline().addLast(new ChunkedWriteHandler());
-                            ch.pipeline().addLast(new CorsHandler(corsConfig));
+                            if(corsConfig!=null)ch.pipeline().addLast(new CorsHandler(corsConfig));
                             ch.pipeline().addLast(new HttpServerInboundHandler(registry,options));
                         }
                     }).option(ChannelOption.SO_BACKLOG, 100)
