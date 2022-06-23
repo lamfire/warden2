@@ -7,6 +7,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
@@ -38,12 +39,13 @@ public class HttpServer {
 
 
     public HttpServer(int port){
-        this.options.setPort(port);
+        this("0.0.0.0",port);
     }
 
     public HttpServer(String bind,int port){
         this.options.setBind(bind);
         this.options.setPort(port);
+        this.corsConfig = CorsConfigBuilder.forAnyOrigin().allowNullOrigin().allowCredentials().allowedRequestHeaders("*").allowedRequestMethods(HttpMethod.POST,HttpMethod.GET,HttpMethod.PUT,HttpMethod.DELETE,HttpMethod.OPTIONS,HttpMethod.TRACE).build();
     }
 
     public CorsConfig getCorsConfig() {
