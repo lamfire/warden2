@@ -3,13 +3,11 @@ package com.lamfire.warden;
 import com.lamfire.utils.ObjectFactory;
 
 /**
- * Created with IntelliJ IDEA.
  * User: lamfire
  * Date: 14-5-9
  * Time: 上午10:08
- * To change this template use File | Settings | File Templates.
  */
-class DefaultActionFactory implements ActionFactory {
+public class DefaultActionFactory implements ActionFactory {
     private Class<?> actionClass;
     private ObjectFactory<Action> factory;
 

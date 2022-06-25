@@ -1,6 +1,6 @@
 package com.lamfire.warden;
 
-class SingletonActionFactory extends DefaultActionFactory {
+public class SingletonActionFactory extends DefaultActionFactory {
 
     private Action instance ;
 
