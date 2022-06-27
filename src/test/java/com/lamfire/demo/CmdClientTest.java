@@ -70,10 +70,28 @@ public class CmdClientTest {
         System.out.println(resp);
     }
 
+    public static void del()throws IOException {
+        HttpClient client = new HttpClient();
+        client.setContentType(HttpClient.ContentType.application_x_www_form_urlencoded);
+        client.setMethod("POST");
+        client.setCharset("UTF-8");
+        client.open("http://127.0.0.1:8844/api");
+        JSON json = new JSON();
+        json.put("cmd","del");
+        json.put("add",100);
+
+        client.post(codec.encode(null,json.toBytes()));
+        byte[] ret = codec.decode(null,client.read());
+
+        JSON resp = JSON.fromBytes(ret);
+        System.out.println(resp);
+    }
+
 
     public static void main(String[] args)throws IOException {
         register();
         login();
         add();
+        del();
     }
 }

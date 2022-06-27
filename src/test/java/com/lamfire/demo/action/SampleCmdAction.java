@@ -1,11 +1,13 @@
 package com.lamfire.demo.action;
 
+import com.lamfire.code.Base64;
 import com.lamfire.json.JSON;
 import com.lamfire.warden.ActionContext;
 import com.lamfire.warden.anno.ACTION;
 import com.lamfire.warden.cmd.CMD;
 import com.lamfire.warden.cmd.CMDAction;
-import com.lamfire.warden.cmd.CMD_CONFIG;
+import com.lamfire.warden.cmd.CODEC;
+import com.lamfire.warden.cmd.CmdREQ;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +16,7 @@ import com.lamfire.warden.cmd.CMD_CONFIG;
  * Time: 下午2:44
  * To change this template use File | Settings | File Templates.
  */
-@CMD_CONFIG(key = "cmd",codec = "com.lamfire.demo.utils.MyDataCodec")
+@CODEC(codec = "com.lamfire.demo.utils.JSONCmdCodec")
 @ACTION(path="/api",singleton = true)
 public class SampleCmdAction extends CMDAction {
 
@@ -32,6 +34,12 @@ public class SampleCmdAction extends CMDAction {
     @CMD(name = "add")
     public void add(JSON data){
         System.out.println(data);
-        throw new RuntimeException("RuntimeException");
+        //throw new RuntimeException("RuntimeException");
     }
+
+    @CMD(name = "del")
+    public byte[] del(JSON data){
+        return data.toBytes();
+    }
+
 }

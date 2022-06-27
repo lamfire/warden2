@@ -6,7 +6,6 @@ import java.lang.annotation.*;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.TYPE })
-public @interface CMD_CONFIG {
-	String key();
-	String codec()default "";
+public @interface CODEC {
+    String codec();
 }

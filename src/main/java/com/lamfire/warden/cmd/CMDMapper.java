@@ -19,26 +19,23 @@ import java.util.concurrent.ConcurrentHashMap;
 class CMDMapper {
     private static final Logger LOGGER = Logger.getLogger(CMDMapper.class);
     private final Map<String, ActionMethod> mappers = new ConcurrentHashMap<>();
-    private DataCodec codec;
-    private String cmdKey;
+    private CmdCodec codec;
     public void register(Class<?> actionClass)  {
         if(!Action.class.isAssignableFrom(actionClass)){
             return;
         }
 
-        CMD_CONFIG conf = actionClass.getAnnotation(CMD_CONFIG.class);
+        CODEC conf = actionClass.getAnnotation(CODEC.class);
         if(conf == null){
-            LOGGER.debug("["+actionClass.getName() + "] is assignable from CMDAction,but not found 'CMD_CONFIG' annotation.");
+            LOGGER.debug("["+actionClass.getName() + "] is assignable from CMDAction,but not found 'CODEC' annotation.");
             return;
         }
 
-        this.cmdKey = conf.key();
-        LOGGER.debug("[CMD_CONFIG] : " + actionClass.getName()+" ,cmdKey="+cmdKey);
         String codecClassName = conf.codec();
         if(StringUtils.isNotBlank(codecClassName)) {
-            LOGGER.debug("[CMD_CONFIG] : " + actionClass.getName()+" ,codec="+codecClassName);
+            LOGGER.debug("[CODEC] : " + actionClass.getName()+" ,codec="+codecClassName);
             try {
-                this.codec = (DataCodec)Class.forName(codecClassName).newInstance();
+                this.codec = (CmdCodec)Class.forName(codecClassName).newInstance();
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage(),e);
             }
@@ -57,19 +54,11 @@ class CMDMapper {
         }
     }
 
-    public String getCmdKey() {
-        return cmdKey;
-    }
-
-    public void setCmdKey(String cmdKey) {
-        this.cmdKey = cmdKey;
-    }
-
     public ActionMethod getActionMethod(String name){
         return this.mappers.get(name);
     }
 
-    public DataCodec getCodec() {
+    public CmdCodec getCodec() {
         return codec;
     }
 }

@@ -27,7 +27,7 @@ class MethodArgumentResolver {
         }
     }
 
-    public Object[] resolveArguments(ActionContext context, JSON data){
+    public Object[] resolveArguments(ActionContext context, Object data){
         Object[] args = new Object[methodParameters.length];
         for(int i=0;i<methodParameters.length;i++){
             String parameterName = methodParameters[i].getParameterName();
@@ -38,6 +38,10 @@ class MethodArgumentResolver {
             }
             if(ActionContext.class == type){
                 args[i] = context;
+                continue;
+            }
+            if(byte[].class == type && data instanceof byte[]){
+                args[i] = data;
                 continue;
             }
         }

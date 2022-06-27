@@ -20,7 +20,7 @@ class ActionMethod {
 		this.argumentResolver = new MethodArgumentResolver(actionMethod);
     }
 
-	public Object[] resolveMethodArguments(ActionContext context, JSON data){
+	public Object[] resolveMethodArguments(ActionContext context, Object data){
 		return argumentResolver.resolveArguments(context,data);
 	}
 
