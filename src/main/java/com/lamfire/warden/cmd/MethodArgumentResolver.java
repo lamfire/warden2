@@ -40,6 +40,10 @@ class MethodArgumentResolver {
                 args[i] = context;
                 continue;
             }
+            if(String.class == type){
+                args[i] = data.toString();
+                continue;
+            }
             if(byte[].class == type && data instanceof byte[]){
                 args[i] = data;
                 continue;

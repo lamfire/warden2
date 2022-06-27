@@ -38,8 +38,9 @@ public class SampleCmdAction extends CMDAction {
     }
 
     @CMD(name = "del")
-    public byte[] del(JSON data){
-        return data.toBytes();
+    public byte[] del(String data){
+        System.out.println(data);
+        return data.getBytes();
     }
 
 }
