@@ -38,9 +38,9 @@ public class SampleCmdAction extends CMDAction {
     }
 
     @CMD(name = "del")
-    public byte[] del(String data){
+    public byte[] del(int data){
         System.out.println(data);
-        return data.getBytes();
+        return null;
     }
 
 }

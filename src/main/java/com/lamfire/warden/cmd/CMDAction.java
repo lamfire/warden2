@@ -43,6 +43,7 @@ public class CMDAction implements Action {
             context.writeResponse(respResult);
             return;
         }catch (Exception e){
+            LOGGER.error(this.getClass().getName() +"." + method.getActionMethod().getName() +",invoke exception : " + e.getMessage());
             LOGGER.error(e.getMessage(),e);
             context.setResponseStatus(500);
             context.writeResponse(e.getMessage());
