@@ -17,7 +17,7 @@ public class DefaultActionFactory implements ActionFactory {
     }
 
     @Override
-    public Action make(ActionContext context) {
+    public Action make() {
         try{
             return  factory.newInstance();
         }catch (Exception e){

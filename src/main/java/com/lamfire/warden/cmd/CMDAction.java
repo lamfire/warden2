@@ -8,7 +8,7 @@ import com.lamfire.warden.ActionContext;
 
 public class CMDAction implements Action {
     private static final Logger LOGGER = Logger.getLogger("CMDAction");
-    private static final String DEFAULT_CMD = "index";
+    static final String DEFAULT_CMD = "index";
     private final CMDMapper mapper = new CMDMapper();
     private final MethodVisitor methodVisitor = new MethodVisitor();
 
@@ -74,7 +74,11 @@ public class CMDAction implements Action {
     }
 
     public void onCodecException(ActionContext context,CmdCodec codec,Throwable throwable){
-        LOGGER.error(context.getRealRemoteAddr() +" -> " + codec.getClass().getName() +".invoke exception : " + throwable.getMessage());
+        if(codec != null){
+            LOGGER.error(context.getRealRemoteAddr() +" -> " + codec.getClass().getName() +".invoke exception : " + throwable.getMessage());
+        }else{
+            LOGGER.error(context.getRealRemoteAddr() +" -> " + this.getClass().getName() +" Not found 'CODEC' annotation.");
+        }
         LOGGER.error(throwable.getMessage(),throwable);
         context.setResponseStatus(499);
         context.writeResponse(throwable.getMessage());

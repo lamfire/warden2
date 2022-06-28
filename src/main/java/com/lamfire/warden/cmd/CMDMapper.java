@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 class CMDMapper {
     private static final Logger LOGGER = Logger.getLogger(CMDMapper.class);
     private final Map<String, ActionMethod> mappers = new ConcurrentHashMap<>();
-    private CmdCodec codec;
+    private CmdCodec codec = new DefaultCmdCodec();
     public void register(Class<?> actionClass)  {
         if(!Action.class.isAssignableFrom(actionClass)){
             return;
@@ -27,7 +27,7 @@ class CMDMapper {
 
         CODEC conf = actionClass.getAnnotation(CODEC.class);
         if(conf == null){
-            LOGGER.debug("["+actionClass.getName() + "] is assignable from CMDAction,but not found 'CODEC' annotation.");
+            LOGGER.error("["+actionClass.getName() + "] is assignable from CMDAction,but not found 'CODEC' annotation.");
             return;
         }
 

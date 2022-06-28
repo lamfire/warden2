@@ -2,17 +2,15 @@ package com.lamfire.warden;
 
 public class SingletonActionFactory extends DefaultActionFactory {
 
-    private Action instance ;
+    private final Action instance ;
 
     public SingletonActionFactory(Class<?> actionClass) {
         super(actionClass);
+        this.instance = super.make();
     }
 
     @Override
-    public synchronized Action make(ActionContext context) {
-        if(instance == null){
-            this.instance = super.make(context);
-        }
+    public Action make() {
         return this.instance;
     }
 }

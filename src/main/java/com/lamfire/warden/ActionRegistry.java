@@ -64,7 +64,7 @@ public class ActionRegistry {
         if(factory == null){
             return null;
         }
-        return factory.make(context);
+        return factory.make();
 	}
 	
 	public void mappingPackage(String packageName) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {

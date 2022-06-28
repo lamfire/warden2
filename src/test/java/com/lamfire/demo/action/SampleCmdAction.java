@@ -16,7 +16,7 @@ import com.lamfire.warden.cmd.CmdREQ;
  * Time: 下午2:44
  * To change this template use File | Settings | File Templates.
  */
-@CODEC(codec = "com.lamfire.demo.utils.JSONCmdCodec")
+//@CODEC(codec = "com.lamfire.demo.utils.JSONCmdCodec")
 @ACTION(path="/api",singleton = true)
 public class SampleCmdAction extends CMDAction {
 
