@@ -18,7 +18,13 @@ public class CMDAction implements Action {
     @Override
     public void execute(ActionContext context) {
         CmdCodec codec = mapper.getCodec();
-        byte[] data = codec.decode(context);
+        byte[] data = null;
+        try {
+            data = codec.decode(context);
+        }catch (Throwable t){
+            onCodecException(context,codec,t);
+            return;
+        }
 
         CmdREQ<Object> req = codec.parseCmd(context,data);
         String cmd = req.getCmd();
@@ -60,9 +66,16 @@ public class CMDAction implements Action {
     }
 
     public void onThrowable(ActionContext context,String cmd,Object data,Throwable throwable){
-        LOGGER.error(this.getClass().getName() +"." + cmd +",invoke exception : " + throwable.getMessage());
+        LOGGER.error(context.getRealRemoteAddr() +" -> " + this.getClass().getName() +"." + cmd +"("+data.toString()+"),invoke exception : " + throwable.getMessage());
         LOGGER.error(throwable.getMessage(),throwable);
         context.setResponseStatus(500);
+        context.writeResponse(throwable.getMessage());
+    }
+
+    public void onCodecException(ActionContext context,CmdCodec codec,Throwable throwable){
+        LOGGER.error(context.getRealRemoteAddr() +" -> " + codec.getClass().getName() +".invoke exception : " + throwable.getMessage());
+        LOGGER.error(throwable.getMessage(),throwable);
+        context.setResponseStatus(499);
         context.writeResponse(throwable.getMessage());
     }
 }
