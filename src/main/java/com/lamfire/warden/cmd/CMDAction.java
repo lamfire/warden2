@@ -8,7 +8,7 @@ import com.lamfire.warden.ActionContext;
 
 public class CMDAction implements Action {
     private static final Logger LOGGER = Logger.getLogger("CMDAction");
-    static final String DEFAULT_CMD = "index";
+    static final String DEFAULT_CMD = "default";
     private final CMDMapper mapper = new CMDMapper();
     private final MethodVisitor methodVisitor = new MethodVisitor();
 

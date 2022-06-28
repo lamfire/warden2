@@ -24,25 +24,19 @@ class CMDMapper {
         if(!Action.class.isAssignableFrom(actionClass)){
             return;
         }
-
         CODEC conf = actionClass.getAnnotation(CODEC.class);
-        if(conf == null){
-            LOGGER.error("["+actionClass.getName() + "] is assignable from CMDAction,but not found 'CODEC' annotation.");
-            return;
-        }
-
-        String codecClassName = conf.codec();
-        if(StringUtils.isNotBlank(codecClassName)) {
-            LOGGER.debug("[CODEC] : " + actionClass.getName()+" ,codec="+codecClassName);
-            try {
-                this.codec = (CmdCodec)Class.forName(codecClassName).newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage(),e);
+        if(conf != null){
+            String codecClassName = conf.codec();
+            if (StringUtils.isNotBlank(codecClassName)) {
+                LOGGER.debug("[CODEC] : " + actionClass.getName() + " ,codec=" + codecClassName);
+                try {
+                    this.codec = (CmdCodec) Class.forName(codecClassName).newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
             }
-        }
-
-        if(!Action.class.isAssignableFrom(actionClass)){
-            return;
+        }else {
+            LOGGER.warn("["+actionClass.getName() + "] is assignable from CMDAction,but not found 'CODEC' annotation.");
         }
         Collection<Method> methods = ClassUtils.getAllDeclaredMethodsByAnnotation(actionClass, CMD.class);
         for(Method m : methods) {
