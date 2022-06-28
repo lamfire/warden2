@@ -2,6 +2,7 @@ package com.lamfire.warden.cmd;
 
 import com.lamfire.json.JSON;
 import com.lamfire.logger.Logger;
+import com.lamfire.utils.StringUtils;
 import com.lamfire.warden.Action;
 import com.lamfire.warden.ActionContext;
 
@@ -19,12 +20,15 @@ public class CMDAction implements Action {
         CmdCodec codec = mapper.getCodec();
         byte[] data = codec.decode(context);
 
-        CmdREQ<JSON> req = codec.parseCmd(context,data);
+        CmdREQ<Object> req = codec.parseCmd(context,data);
         String cmd = req.getCmd();
+        if(StringUtils.isBlank(cmd)){
+            cmd = "index";
+        }
+
         ActionMethod method = mapper.getActionMethod(cmd);
         if(method == null){
-            LOGGER.error(context.getRealRemoteAddr() +","+context.getPath()+",CMD="+cmd +",Not found.");
-            context.setResponseStatus(404);
+            on404(context,cmd,req.getData());
             return;
         }
 
@@ -38,16 +42,27 @@ public class CMDAction implements Action {
                 respResult = (byte[])resultObj;
             }else if(resultObj instanceof JSON){
                 respResult = ((JSON)resultObj).toBytes();
+            }else if(resultObj instanceof String){
+                respResult = ((String)resultObj).getBytes();
             }
             respResult = codec.encode(context,respResult);
             context.writeResponse(respResult);
             return;
-        }catch (Exception e){
-            LOGGER.error(this.getClass().getName() +"." + method.getActionMethod().getName() +",invoke exception : " + e.getMessage());
-            LOGGER.error(e.getMessage(),e);
-            context.setResponseStatus(500);
-            context.writeResponse(e.getMessage());
+        }catch (Throwable e){
+            onThrowable(context,cmd,req.getData(),e);
             return;
         }
+    }
+
+    public void on404(ActionContext context,String cmd,Object data){
+        LOGGER.error(context.getRealRemoteAddr() +","+context.getPath()+",Not found : CMD="+cmd +",data=" + data.toString());
+        context.setResponseStatus(404);
+    }
+
+    public void onThrowable(ActionContext context,String cmd,Object data,Throwable throwable){
+        LOGGER.error(this.getClass().getName() +"." + cmd +",invoke exception : " + throwable.getMessage());
+        LOGGER.error(throwable.getMessage(),throwable);
+        context.setResponseStatus(500);
+        context.writeResponse(throwable.getMessage());
     }
 }
