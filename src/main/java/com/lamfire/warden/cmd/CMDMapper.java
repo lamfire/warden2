@@ -1,6 +1,8 @@
 package com.lamfire.warden.cmd;
 
 import com.lamfire.logger.Logger;
+import com.lamfire.simplecache.Cache;
+import com.lamfire.simplecache.Caches;
 import com.lamfire.utils.ClassUtils;
 import com.lamfire.utils.StringUtils;
 import com.lamfire.warden.Action;
@@ -43,8 +45,15 @@ class CMDMapper {
             CMD cmd = m.getAnnotation(CMD.class);
             String cmdName = cmd.name();
             ActionMethod method = new ActionMethod(cmdName, actionClass,m);
+
+            //cache
+            CACHED cached = m.getAnnotation(CACHED.class);
+            if(cached != null){
+                Cache<String,Object> cache = Caches.makeLruCache(cached.maxElements(),cached.timeToLiveMillis());
+                method.setCache(cache);
+            }
             mappers.put(cmdName, method);
-            LOGGER.debug("[CMD] : " + cmdName + " -> " + actionClass.getName()+"."+m.getName());
+            LOGGER.debug("[CMD] : " + cmdName + " -> " + actionClass.getName()+"."+m.getName()+",cached=" + cached);
         }
     }
 

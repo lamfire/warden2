@@ -91,6 +91,10 @@ public class CmdClientTest {
     public static void main(String[] args)throws IOException {
         register();
         login();
+        login();
+        login();
+        login();
+        login();
         add();
         del();
     }

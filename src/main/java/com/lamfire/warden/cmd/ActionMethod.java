@@ -1,7 +1,7 @@
 package com.lamfire.warden.cmd;
 
-import com.lamfire.json.JSON;
 import com.lamfire.logger.Logger;
+import com.lamfire.simplecache.Cache;
 import com.lamfire.warden.ActionContext;
 import java.lang.reflect.Method;
 
@@ -12,6 +12,7 @@ class ActionMethod {
 	private Class<?> actionClass;
 	private Method actionMethod;
 	private MethodArgumentResolver argumentResolver;
+	private Cache<String,Object> cache;
 
     public ActionMethod(String cmd, Class<?> actionClass, Method actionMethod) {
         this.cmd = cmd;
@@ -38,5 +39,13 @@ class ActionMethod {
 
 	public MethodArgumentResolver getArgumentResolver() {
 		return argumentResolver;
+	}
+
+	public Cache<String, Object> getCache() {
+		return cache;
+	}
+
+	public void setCache(Cache<String, Object> cache) {
+		this.cache = cache;
 	}
 }

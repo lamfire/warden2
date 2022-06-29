@@ -1,7 +1,9 @@
 package com.lamfire.warden.cmd;
 
+import com.lamfire.code.MD5;
 import com.lamfire.json.JSON;
 import com.lamfire.logger.Logger;
+import com.lamfire.simplecache.Cache;
 import com.lamfire.utils.StringUtils;
 import com.lamfire.warden.Action;
 import com.lamfire.warden.ActionContext;
@@ -14,6 +16,22 @@ public class CMDAction implements Action {
 
     public CMDAction(){
         mapper.register(this.getClass());
+    }
+
+    private String getCacheKey(final Object data){
+        if(data == null){
+            return null;
+        }
+        if(data instanceof byte[]){
+            return MD5.hash((byte[])data);
+        }
+        if(data instanceof JSON){
+            return MD5.hash(((JSON)data).toBytes());
+        }
+        if(data instanceof String){
+            return MD5.hash(((String)data).getBytes());
+        }
+        return String.valueOf(data.hashCode());
     }
 
     @Override
@@ -40,7 +58,25 @@ public class CMDAction implements Action {
         }
 
         try {
-            Object resultObj = methodVisitor.visit(context, this, method.getActionMethod(), method.resolveMethodArguments(context, req.getData()));
+            Object resultObj = null;
+            Cache<String,Object> cache = method.getCache();
+
+            if(cache != null){
+                // in cache
+                String cacheKey = getCacheKey(req.getData());
+               if(cacheKey != null){
+                   resultObj = cache.get(cacheKey);
+                   LOGGER.debug("Find in cache : ["+cacheKey +"] = " + resultObj);
+                   if(resultObj == null){
+                       //cache expired
+                       resultObj = methodVisitor.visit(context, this, method.getActionMethod(), method.resolveMethodArguments(context, req.getData()));
+                       cache.set(cacheKey,resultObj);
+                   }
+               }
+            }else {
+                resultObj = methodVisitor.visit(context, this, method.getActionMethod(), method.resolveMethodArguments(context, req.getData()));
+            }
+
             if(resultObj == null){
                 return;
             }
